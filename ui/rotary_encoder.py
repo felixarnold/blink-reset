@@ -18,7 +18,7 @@ class RotaryEncoder:
         self.position = 0
         self.button_pressed = False
 
-    def update_position(self):
+    def update_position(self, channel):
         pin_a_state = GPIO.input(self.pin_a)
         pin_b_state = GPIO.input(self.pin_b)
 
@@ -31,7 +31,7 @@ class RotaryEncoder:
 
         self.last_state = pin_a_state
 
-    def select_button_pressed(self):
+    def select_button_pressed(self, channel):
         self.button_pressed = True
 
     def clear_button_pressed(self):
