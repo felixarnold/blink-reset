@@ -1,5 +1,11 @@
 #!/bin/bash
 
+sudo apt update && sudo apt upgrade -y
+sudo apt install python3-venv
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
 # Load the I2C kernel modules
 modprobe i2c_dev
 modprobe i2c_bcm2708
