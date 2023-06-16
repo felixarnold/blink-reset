@@ -1,13 +1,16 @@
 # lcd.py
 
-import smbus2
+import smbus2 as smbus
 import time
+
+LCD_CMD = 0
+LCD_DAT = 1
 
 # LCD commands
 LCD_CLEARDISPLAY = 0x01
 LCD_RETURNHOME = 0x02
 LCD_ENTRYMODESET = 0x04
-LCD_DISPLAYCONTROL = 0x08
+LCD_BACKLIGHT = 0x08
 LCD_FUNCTIONSET = 0x20
 LCD_SETDDRAMADDR = 0x80
 
@@ -21,43 +24,42 @@ LCD_CURSOROFF = 0x00
 LCD_BLINKOFF = 0x00
 
 # LCD flags for function set
-LCD_4BITMODE = 0x00
 LCD_2LINE = 0x08
 LCD_5X8DOTS = 0x00
 
 
 class LCD:
     def __init__(self, i2c_address):
-        self.bus = smbus2.SMBus(1)  # Use I2C bus number 1
+        self.bus = smbus.SMBus(1)  # Use I2C bus number 1
         self.i2c_address = i2c_address
 
-        # Initialize the LCD
-        self._init_lcd()
+        self.bus.write_byte(self.i2c_address, 0x03)
+        self.bus.write_byte(self.i2c_address, 0x03)
+        self.bus.write_byte(self.i2c_address, 0x03)
+        self.bus.write_byte(self.i2c_address, 0x02)
 
-    def _init_lcd(self):
         # Initialize the LCD module
         self._send_command(
             LCD_FUNCTIONSET |
             LCD_2LINE |
-            LCD_5X8DOTS |
-            LCD_4BITMODE)
+            LCD_5X8DOTS)
         self._send_command(
-            LCD_DISPLAYCONTROL |
+            LCD_BACKLIGHT |
             LCD_DISPLAYON)
+        self._send_command(LCD_CLEARDISPLAY)
         self._send_command(
             LCD_ENTRYMODESET |
             LCD_ENTRYLEFT)
-        self._send_command(LCD_CLEARDISPLAY)
         time.sleep(0.2)
 
     def _send_command(self, cmd):
         # Send a command to the LCD
-        self.bus.write_byte_data(self.i2c_address, 0x00, cmd)
+        self.bus.write_byte_data(self.i2c_address, LCD_CMD, cmd)
         time.sleep(0.01)
 
     def _send_data(self, data):
         # Send data to the LCD
-        self.bus.write_byte_data(self.i2c_address, 0x40, data)
+        self.bus.write_byte_data(self.i2c_address, LCD_DAT, data)
         time.sleep(0.01)
 
     def clear(self):
