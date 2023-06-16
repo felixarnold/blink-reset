@@ -10,7 +10,7 @@ from ui.rotary_encoder import RotaryEncoder
 LCD_ADDRESS = 0x27
 LCD_PORT = 1
 lcd = CharLCD(
-    i2c_expander='PC8574',
+    i2c_expander='PCF8574',
     address=LCD_ADDRESS,
     port=LCD_PORT,
     cols=16,
@@ -25,7 +25,7 @@ re = RotaryEncoder(PIN_A, PIN_B, PIN_BUTTON)
 
 def initialize_lcd():
     lcd.clear()
-    lcd.write_string("Welcome!")
+    lcd.write_string('Welcome!')
 
 
 def initialize_re():
