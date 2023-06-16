@@ -48,7 +48,7 @@ class LCD:
             LCD_ENTRYMODESET |
             LCD_ENTRYLEFT)
         self._send_command(LCD_CLEARDISPLAY)
-        time.sleep(0.1)
+        time.sleep(0.2)
 
     def _send_command(self, cmd):
         # Send a command to the LCD
@@ -82,4 +82,3 @@ class LCD:
         # Write a message to a specific line on the LCD
         self.set_cursor(0, row)
         self.write(message)
-
