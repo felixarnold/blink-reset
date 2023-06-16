@@ -21,6 +21,7 @@ LCD_CURSOROFF = 0x00
 LCD_BLINKOFF = 0x00
 
 # LCD flags for function set
+LCD_4BITMODE = 0x00
 LCD_2LINE = 0x08
 LCD_5X8DOTS = 0x00
 
@@ -38,36 +39,34 @@ class LCD:
         self._send_command(
             LCD_FUNCTIONSET |
             LCD_2LINE |
-            LCD_5X8DOTS)
+            LCD_5X8DOTS |
+            LCD_4BITMODE)
         self._send_command(
             LCD_DISPLAYCONTROL |
-            LCD_DISPLAYON |
-            LCD_CURSOROFF |
-            LCD_BLINKOFF)
+            LCD_DISPLAYON)
         self._send_command(
             LCD_ENTRYMODESET |
-            LCD_ENTRYLEFT |
-            LCD_ENTRYSHIFTDECREMENT)
+            LCD_ENTRYLEFT)
         self._send_command(LCD_CLEARDISPLAY)
         time.sleep(0.1)
 
     def _send_command(self, cmd):
         # Send a command to the LCD
         self.bus.write_byte_data(self.i2c_address, 0x00, cmd)
+        time.sleep(0.01)
 
     def _send_data(self, data):
         # Send data to the LCD
         self.bus.write_byte_data(self.i2c_address, 0x40, data)
+        time.sleep(0.01)
 
     def clear(self):
         # Clear the LCD display
         self._send_command(LCD_CLEARDISPLAY)
-        time.sleep(0.1)
 
     def home(self):
         # Return the cursor to the home position
         self._send_command(LCD_RETURNHOME)
-        time.sleep(0.1)
 
     def set_cursor(self, col, row):
         # Set the cursor position
