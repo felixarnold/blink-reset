@@ -13,13 +13,16 @@ PIN_A = 4
 PIN_B = 17
 PIN_BUTTON = 27
 re = RotaryEncoder(PIN_A, PIN_B, PIN_BUTTON)
-re.setup_rotary_encoder()
 
 
 def initialize_lcd():
     lcd.clear()
     lcd.home()
     lcd.write_line("Welcome!", 0)
+
+
+def initialize_re():
+    re.setup_rotary_encoder()
 
 
 def detect_microcontroller_boards(devices, boards_data):
@@ -63,6 +66,7 @@ def flash_microcontroller_board(board_name):
 
 def main():
     initialize_lcd()
+    initialize_re()
 
     with open('boards.json') as f:
         boards_data = json.load(f)

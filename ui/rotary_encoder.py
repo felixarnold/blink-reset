@@ -9,9 +9,9 @@ class RotaryEncoder:
 
         # Set up GPIO mode and pins
         GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(self.pin_a, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.setup(self.pin_b, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.setup(self.button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(self.pin_a, GPIO.IN)
+        GPIO.setup(self.pin_b, GPIO.IN)
+        GPIO.setup(self.button_pin, GPIO.IN)
 
         # Variables to track state and position
         self.last_state = None
