@@ -8,7 +8,7 @@ class RotaryEncoder:
         self.button_pin = button_pin
 
         # Set up GPIO mode and pins
-        GPIO.setmode(GPIO.BOARD)
+        GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.pin_a, GPIO.IN)
         GPIO.setup(self.pin_b, GPIO.IN)
         GPIO.setup(self.button_pin, GPIO.IN)
