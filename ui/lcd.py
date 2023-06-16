@@ -35,9 +35,19 @@ class LCD:
 
     def _init_lcd(self):
         # Initialize the LCD module
-        self._send_command(LCD_FUNCTIONSET | LCD_2LINE | LCD_5X8DOTS)
-        self._send_command(LCD_DISPLAYCONTROL | LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF)
-        self._send_command(LCD_ENTRYMODESET | LCD_ENTRYLEFT | LCD_ENTRYSHIFTDECREMENT)
+        self._send_command(
+            LCD_FUNCTIONSET |
+            LCD_2LINE |
+            LCD_5X8DOTS)
+        self._send_command(
+            LCD_DISPLAYCONTROL |
+            LCD_DISPLAYON |
+            LCD_CURSOROFF |
+            LCD_BLINKOFF)
+        self._send_command(
+            LCD_ENTRYMODESET |
+            LCD_ENTRYLEFT |
+            LCD_ENTRYSHIFTDECREMENT)
         self._send_command(LCD_CLEARDISPLAY)
         time.sleep(0.1)
 

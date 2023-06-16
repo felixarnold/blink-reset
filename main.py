@@ -3,6 +3,7 @@
 import usb.core
 import usb.util
 import json
+from time import sleep
 from ui.lcd import LCD
 from ui.rotary_encoder import RotaryEncoder
 
@@ -67,6 +68,7 @@ def flash_microcontroller_board(board_name):
 def main():
     initialize_lcd()
     initialize_re()
+    sleep(10)
 
     with open('boards.json') as f:
         boards_data = json.load(f)
