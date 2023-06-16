@@ -17,8 +17,6 @@ re = RotaryEncoder(PIN_A, PIN_B, PIN_BUTTON)
 
 
 def initialize_lcd():
-    lcd.clear()
-    lcd.home()
     lcd.write_line("Welcome!", 0)
 
 
