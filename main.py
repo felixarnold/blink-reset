@@ -4,11 +4,18 @@ import usb.core
 import usb.util
 import json
 from time import sleep
-from ui.lcd import LCD
+from RPLCD.i2c import CharLCD
 from ui.rotary_encoder import RotaryEncoder
 
 LCD_ADDRESS = 0x27
-lcd = LCD(LCD_ADDRESS)
+LCD_PORT = 1
+lcd = CharLCD(
+    i2c_expander='PC8574',
+    address=LCD_ADDRESS,
+    port=LCD_PORT,
+    cols=16,
+    rows=2,
+    dotsize=8)
 
 PIN_A = 4
 PIN_B = 17
@@ -17,7 +24,8 @@ re = RotaryEncoder(PIN_A, PIN_B, PIN_BUTTON)
 
 
 def initialize_lcd():
-    lcd.write_line("Welcome!", 0)
+    lcd.clear()
+    lcd.write_string("Welcome!")
 
 
 def initialize_re():
