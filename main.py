@@ -1,12 +1,15 @@
 #!/usr/bin/python3
 # main.py
 
-import usb.core
-import usb.util
+# import usb.core
+# import usb.util
 import json
 from time import sleep
 from RPLCD.i2c import CharLCD
+import pyudev
 from ui.rotary_encoder import RotaryEncoder
+
+boards_data = None
 
 LCD_ADDRESS = 0x27
 LCD_PORT = 1
@@ -23,30 +26,25 @@ PIN_BUTTON = 27
 re = RotaryEncoder(PIN_A, PIN_B, PIN_BUTTON)
 
 
-def initialize_lcd():
-    lcd.clear()
-    lcd.write_string('Welcome!')
-
-
 def initialize_re():
     re.setup_rotary_encoder()
 
 
-def detect_microcontroller_boards(devices, boards_data):
-    connected_boards = []
+def detect_board(device):
+    global boards_data
+    if boards_data is None:
+        pass
 
-    for device in devices:
-        vid = device.idVendor
-        pid = device.idProduct
+    vid = device.idVendor
+    pid = device.idProduct
 
-        print(vid)
-        print(pid)
+    print(device)
 
-        for board_name, info in boards_data.items():
-            if vid == int(info['vid'], 16) and pid == int(info['pid'], 16):
-                connected_boards.append(board_name)
+    for board_name, info in boards_data.items():
+        if vid == int(info['vid'], 16) and pid == int(info['pid'], 16):
+            return device
 
-    return connected_boards
+    pass
 
 
 def select_microcontroller_board(boards_data):
@@ -74,17 +72,12 @@ def flash_microcontroller_board(board_name):
     print(f"Flashing microcontroller board: {board_name}")
 
 
-def main():
-    initialize_lcd()
-    initialize_re()
-    sleep(1)
+def blink_reset(action, device):
+    global boards_data
+    lcd.backlight_enabled = True
+    lcd.write_string("Hello")
 
-    with open('boards.json', 'r') as file:
-        boards_data = json.load(file)
-
-    devices = usb.core.find(find_all=True)
-
-    connected_boards = detect_microcontroller_boards(devices, boards_data)
+    connected_boards = detect_board(device)
 
     if len(connected_boards) == 0:
         print("No microcontroller boards detected.")
@@ -109,8 +102,27 @@ def main():
     # Flash the selected microcontroller board
     flash_microcontroller_board(selected_board)
 
+    lcd.backlight_enabled = False
+
+
+def main():
+    lcd.backlight_enabled = False
+
+    with open('boards.json', 'r') as file:
+        boards_data = json.load(file)
+
+    context = pyudev.Context()
+    monitor = pyudev.Monitor.from_netlink(context)
+    monitor.filter_by(subsystem="usb")
+
+    observer = pyudev.MonitorObserver(monitor, blink_reset)
+    observer.start()
+
+    initialize_re()
+
+    while True:
+        pass
+
 
 if __name__ == '__main__':
     main()
-    lcd.backlight_enabled = False
-    lcd.close(clear=True)
