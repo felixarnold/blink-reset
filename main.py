@@ -35,14 +35,14 @@ def detect_microcontroller_boards(devices, boards_data):
     connected_boards = []
 
     for device in devices:
-        vid = hex(device.idVendor)
-        pid = hex(device.idProduct)
+        vid = device.idVendor
+        pid = device.idProduct
 
         print(vid)
         print(pid)
 
-        for board_name, board_info in boards_data.items():
-            if vid == board_info['vid'] and pid == board_info['pid']:
+        for board_name, info in boards_data.items():
+            if vid == int(info['vid'], 16) and pid == int(info['pid'], 16):
                 connected_boards.append(board_name)
 
     return connected_boards
