@@ -1,5 +1,17 @@
 #!/bin/bash
 
+if [ "$EUID" -ne 0 ]
+    then echo "Please run as root"
+    exit
+fi
+
+try_echo () {
+    if grep -q -ne "$1" "$2"
+    then echo "already exists"
+    else echo "$1" >> "$2"
+    fi
+}
+
 sudo apt update && sudo apt upgrade -y
 # sudo apt install python3-venv
 # python3 -m venv venv
@@ -11,7 +23,11 @@ modprobe i2c_dev
 modprobe i2c_bcm2708
 
 # Enable I2C on the Raspberry Pi
-echo "dtparam=i2c1=on" >> /boot/config.txt
+setting1="dtparam=i2c1=on"
+setting2="dtparam=i2c_arm=on"
+path="/boot/config.txt"
+try_echo "dtparam=i2c1=on" $path
+# echo "dtparam=i2c1=on" >> /boot/config.txt
 echo "dtparam=i2c_arm=on" >> /boot/config.txt
 
 # Add the I2C devices to the modules file
