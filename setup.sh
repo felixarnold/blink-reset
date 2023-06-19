@@ -6,7 +6,7 @@ if [ "$(id -u)" -ne 0 ]
 fi
 
 try_echo () {
-    if [ -z "$(grep $1 $2)" ]
+    if [ -z "$(grep "$1" $2)" ]
     then
         echo "$1" >> "$2"
         echo "Set up $2"
