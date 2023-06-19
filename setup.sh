@@ -6,7 +6,7 @@ if [ "$(id -u)" -ne 0 ]
 fi
 
 try_echo () {
-    if ["$(grep "$1" "$2")" -e "" ];
+    if ["$(grep -q $1 $2)"]
     then echo "$1" >> "$2"
     fi
 }
