@@ -1,2 +1,2 @@
 #!/bin/bash
-python "$HOME/blink-reset/main.py"
+python3 "$PWD/main.py"
