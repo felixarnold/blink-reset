@@ -1,7 +1,7 @@
 {
-  "board1": {
-    "vid": 4660,
-    "pid": 32896
+  "arduino_uno_r3": {
+    "vid": 2341,
+    "pid": 0043
   },
   "board2": {
     "vid": 5824,
