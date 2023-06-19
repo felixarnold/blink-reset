@@ -38,6 +38,9 @@ def detect_microcontroller_boards(devices, boards_data):
         vid = device.idVendor
         pid = device.idProduct
 
+        print(vid)
+        print(pid)
+
         for board_name, board_info in boards_data.items():
             if vid == board_info['vid'] and pid == board_info['pid']:
                 connected_boards.append(board_name)
