@@ -7,7 +7,6 @@ fi
 
 try_echo () {
     if grep -q -ne "$1" "$2"
-    then echo "already exists"
     else echo "$1" >> "$2"
     fi
 }
@@ -28,14 +27,20 @@ setting2="dtparam=i2c_arm=on"
 path="/boot/config.txt"
 try_echo "dtparam=i2c1=on" $path
 # echo "dtparam=i2c1=on" >> /boot/config.txt
-echo "dtparam=i2c_arm=on" >> /boot/config.txt
+try_echo "dtparam=i2c_arm=on" $path
+# echo "dtparam=i2c_arm=on" >> /boot/config.txt
 
 # Add the I2C devices to the modules file
-echo "i2c-dev" >> /etc/modules
-echo "i2c-bcm2708" >> /etc/modules
+path="/etc/modules"
+try_echo "i2c-dev" $path
+# echo "i2c-dev" >> /etc/modules
+try_echo "i2c_bcm2708" $path
+# echo "i2c-bcm2708" >> /etc/modules
 
 # setup udev
-echo 'SUBSYSTEM=="usb", ACTION=="add", RUN+="$HOME/blink-reset/run-blink-reset.sh"' >> /etc/udev/rules.d/99-reset-device.rules
+path="/etc/udev/rules.d/99-reset-device.rules"
+try_echo 'SUBSYSTEM=="usb", ACTION=="add", RUN+="$HOME/blink-reset/run-blink-reset.sh"' $path
+# echo 'SUBSYSTEM=="usb", ACTION=="add", RUN+="$HOME/blink-reset/run-blink-reset.sh"' >> /etc/udev/rules.d/99-reset-device.rules
 
 # Restart the Raspberry Pi to apply the changes
 reboot
