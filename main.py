@@ -75,8 +75,8 @@ def main():
     initialize_re()
     sleep(1)
 
-    with open('./boards.json') as f:
-        boards_data = json.load(f)
+    with open('boards.json') as file:
+        boards_data = json.load(file)
 
     devices = usb.core.find(find_all=True)
 
