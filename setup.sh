@@ -7,6 +7,7 @@ fi
 
 try_echo () {
     if grep -q -ne "$1" "$2"
+    then ;
     else echo "$1" >> "$2"
     fi
 }
