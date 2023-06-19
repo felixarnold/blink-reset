@@ -43,7 +43,7 @@ try_echo "i2c-bcm2708" $path
 # echo "i2c-bcm2708" >> /etc/modules
 
 echo "# Setup udev config"
-text="SUBSYSTEM==\"usb\", ACTION==\"add\", RUN+=\"\$HOME/blink-reset/run-blink-reset.sh\""
+text="SUBSYSTEM==\"usb\", ACTION==\"add\", RUN+=\"/usr/bin/python3 \$HOME/blink-reset/main.py\""
 path="/etc/udev/rules.d/99-reset-device.rules"
 try_echo "$text" $path
 # echo 'SUBSYSTEM=="usb", ACTION=="add", RUN+="$HOME/blink-reset/run-blink-reset.sh"' >> /etc/udev/rules.d/99-reset-device.rules
