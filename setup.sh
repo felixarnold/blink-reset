@@ -38,8 +38,9 @@ try_echo "i2c_bcm2708" $path
 # echo "i2c-bcm2708" >> /etc/modules
 
 # setup udev
+text="SUBSYSTEM==\"usb\", ACTION==\"add\", RUN+=\"$HOME/blink-reset/run-blink-reset.sh\""
 path="/etc/udev/rules.d/99-reset-device.rules"
-try_echo 'SUBSYSTEM=="usb", ACTION=="add", RUN+="$HOME/blink-reset/run-blink-reset.sh"' $path
+try_echo $text $path
 # echo 'SUBSYSTEM=="usb", ACTION=="add", RUN+="$HOME/blink-reset/run-blink-reset.sh"' >> /etc/udev/rules.d/99-reset-device.rules
 
 # Restart the Raspberry Pi to apply the changes
