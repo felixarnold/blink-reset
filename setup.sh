@@ -39,11 +39,11 @@ echo "# Add the I2C devices to the modules file"
 path="/etc/modules"
 try_echo "i2c-dev" $path
 # echo "i2c-dev" >> /etc/modules
-try_echo "i2c_bcm2708" $path
+try_echo "i2c-bcm2708" $path
 # echo "i2c-bcm2708" >> /etc/modules
 
 echo "# Setup udev config"
-text="SUBSYSTEM==\"usb\", ACTION==\"add\", RUN+=\"$HOME/blink-reset/run-blink-reset.sh\""
+text="SUBSYSTEM==\"usb\", ACTION==\"add\", RUN+=\"\$HOME/blink-reset/run-blink-reset.sh\""
 path="/etc/udev/rules.d/99-reset-device.rules"
 try_echo "$text" $path
 # echo 'SUBSYSTEM=="usb", ACTION=="add", RUN+="$HOME/blink-reset/run-blink-reset.sh"' >> /etc/udev/rules.d/99-reset-device.rules
