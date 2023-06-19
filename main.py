@@ -14,8 +14,7 @@ lcd = CharLCD(
     address=LCD_ADDRESS,
     port=LCD_PORT,
     cols=16,
-    rows=2,
-    dotsize=8)
+    rows=2)
 
 PIN_A = 4
 PIN_B = 17
@@ -74,7 +73,7 @@ def flash_microcontroller_board(board_name):
 def main():
     initialize_lcd()
     initialize_re()
-    sleep(10)
+    sleep(1)
 
     with open('boards.json') as f:
         boards_data = json.load(f)
@@ -85,6 +84,9 @@ def main():
 
     if len(connected_boards) == 0:
         print("No microcontroller boards detected.")
+        lcd.clear()
+        lcd.write_string("No MC connected")
+        sleep(2)
         return
 
     # Prompt the user to select a board or manually enter a fallback option
@@ -103,4 +105,5 @@ def main():
 
 if __name__ == '__main__':
     main()
-
+    lcd.backlight_enabled = False
+    lcd.close(clear=True)
