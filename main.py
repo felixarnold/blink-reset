@@ -35,10 +35,11 @@ def detect_board(device):
     if boards_data is None:
         pass
 
+    print(device)
+    pass
+
     vid = device.idVendor
     pid = device.idProduct
-
-    print(device)
 
     for board_name, info in boards_data.items():
         if vid == int(info['vid'], 16) and pid == int(info['pid'], 16):
