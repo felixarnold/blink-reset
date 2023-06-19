@@ -100,6 +100,9 @@ def main():
 
     if selected_board is None:
         print("Exiting...")
+        lcd.clear()
+        lcd.write_string("Exiting...")
+        sleep(2)
         return
 
     # Flash the selected microcontroller board
