@@ -36,7 +36,7 @@ def detect_board(device):
         pass
 
     print(device)
-    pass
+    return
 
     vid = device.idVendor
     pid = device.idProduct
