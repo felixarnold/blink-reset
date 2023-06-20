@@ -34,7 +34,7 @@ def select_microcontroller(device):
     vid = device.get('ID_VENDOR_ID')
     pid = device.get('ID_MODEL_ID')
 
-    for board_name, board_data in boards_data:
+    for board_name, board_data in boards_data.items():
         if board_data['vid'] == vid and board_data['pid'] == pid:
             return device
 
