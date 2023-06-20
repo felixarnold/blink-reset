@@ -30,26 +30,14 @@ def initialize_re():
     re.setup_rotary_encoder()
 
 
-def detect_board(device):
-    global boards_data
-    if boards_data is None:
-        pass
+def select_microcontroller(device):
+    vid = device.get('ID_VENDOR_ID')
+    pid = device.get('ID_MODEL_ID')
 
-    print(device.get('ID_VENDOR_ID'))
-    print(device.get('ID_MODEL_ID'))
-    return device
-
-    vid = device.idVendor
-    pid = device.idProduct
-
-    for board_name, info in boards_data.items():
-        if vid == int(info['vid'], 16) and pid == int(info['pid'], 16):
+    for board_name, board_data in boards_data:
+        if board_data['vid'] == vid and board_data['pid'] == pid:
             return device
 
-    pass
-
-
-def select_microcontroller_board(boards_data):
     # Provide a list of available boards and prompt the user to select one
     print("Available microcontroller boards:")
     for i, board_name in enumerate(boards_data.keys()):
@@ -79,20 +67,14 @@ def blink_reset(action, device):
     lcd.backlight_enabled = True
     lcd.write_string("Hello")
 
-    connected_boards = detect_board(device)
-
-    if len(connected_boards) == 0:
+    if device is None:
         print("No microcontroller boards detected.")
         lcd.clear()
         lcd.write_string("No MC connected")
-        sleep(2)
+        sleep(3)
         return
 
-    # Prompt the user to select a board or manually enter a fallback option
-    if len(connected_boards) == 1:
-        selected_board = connected_boards[0]
-    else:
-        selected_board = select_microcontroller_board(boards_data)
+    selected_board = select_microcontroller(device)
 
     if selected_board is None:
         print("Exiting...")
