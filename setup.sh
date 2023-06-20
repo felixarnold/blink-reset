@@ -15,6 +15,8 @@ try_echo () {
     fi
 }
 
+username=$(logname)
+
 echo "# Setup environment"
 sudo apt update && sudo apt upgrade -y
 # sudo apt install python3-venv
@@ -27,26 +29,32 @@ modprobe i2c_dev
 modprobe i2c_bcm2708
 
 echo "# Enable I2C on the Raspberry Pi"
-setting1="dtparam=i2c1=on"
-setting2="dtparam=i2c_arm=on"
 path="/boot/config.txt"
 try_echo "dtparam=i2c1=on" $path
-# echo "dtparam=i2c1=on" >> /boot/config.txt
 try_echo "dtparam=i2c_arm=on" $path
-# echo "dtparam=i2c_arm=on" >> /boot/config.txt
 
 echo "# Add the I2C devices to the modules file"
 path="/etc/modules"
 try_echo "i2c-dev" $path
-# echo "i2c-dev" >> /etc/modules
 try_echo "i2c-bcm2708" $path
-# echo "i2c-bcm2708" >> /etc/modules
 
-echo "# Setup udev config"
-text="SUBSYSTEM==\"usb\", ACTION==\"add\", RUN+=\"$PWD/main.py\""
-path="/etc/udev/rules.d/99-reset-device.rules"
-try_echo "$text" $path
-# echo 'SUBSYSTEM=="usb", ACTION=="add", RUN+="$HOME/blink-reset/run-blink-reset.sh"' >> /etc/udev/rules.d/99-reset-device.rules
+echo "# Setup service config"
+path="/lib/systemd/system/blink-reset.service"
+try_echo "[Unit]" $path
+try_echo "Description=Service to auto flash mb boards that are connected via usb" $path
+try_echo "After=multi-user.target" $path
+try_echo "" $path
+try_echo "[Service]" $path
+try_echo "Type=idle" $path
+try_echo "ExecStart=$PWD/main.py" $path
+try_echo "WorkingDirectory=$PWD" $path
+try_echo "User=$username" $path
+try_echo "" $path
+try_echo "[Install]" $path
+try_echo "WantedBy=multi-user.target" $path
+
+systemctl enable blink-reset.service
+systemctl start blink-reset.service
 
 # Restart the Raspberry Pi to apply the changes
 read -p "Reboot now? (y/n) " -n 1 -r; echo
