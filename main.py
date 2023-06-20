@@ -33,8 +33,12 @@ def initialize_re():
 def select_microcontroller(device):
     vid = device.get('ID_VENDOR_ID')
     pid = device.get('ID_MODEL_ID')
+    print(vid)
+    print(pid)
 
     for board_name, board_data in boards_data.items():
+        print(board_data['vid'])
+        print(board_data['pid'])
         if board_data['vid'] == vid and board_data['pid'] == pid:
             return device
 
