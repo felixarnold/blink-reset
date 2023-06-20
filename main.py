@@ -107,6 +107,8 @@ def blink_reset(action, device):
 
 
 def main():
+    global boards_data
+
     lcd.backlight_enabled = False
 
     with open('boards.json', 'r') as file:

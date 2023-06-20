@@ -30,11 +30,13 @@ modprobe i2c_bcm2708
 
 echo "# Enable I2C on the Raspberry Pi"
 path="/boot/config.txt"
+touch $path
 try_echo "dtparam=i2c1=on" $path
 try_echo "dtparam=i2c_arm=on" $path
 
 echo "# Add the I2C devices to the modules file"
 path="/etc/modules"
+touch $path
 try_echo "i2c-dev" $path
 try_echo "i2c-bcm2708" $path
 
