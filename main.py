@@ -35,8 +35,9 @@ def detect_board(device):
     if boards_data is None:
         pass
 
-    print(device)
-    return
+    print(device.get('ID_VENDOR_ID'))
+    print(device.get('ID_MODEL_ID'))
+    return device
 
     vid = device.idVendor
     pid = device.idProduct
