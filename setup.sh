@@ -40,16 +40,17 @@ try_echo "i2c-bcm2708" $path
 
 echo "# Setup service config"
 path="/lib/systemd/system/blink-reset.service"
+touch $path
 try_echo "[Unit]" $path
 try_echo "Description=Service to auto flash mb boards that are connected via usb" $path
 try_echo "After=multi-user.target" $path
-try_echo "" $path
+echo "" >> $path
 try_echo "[Service]" $path
 try_echo "Type=idle" $path
 try_echo "ExecStart=$PWD/main.py" $path
 try_echo "WorkingDirectory=$PWD" $path
 try_echo "User=$username" $path
-try_echo "" $path
+echo "" >> $path
 try_echo "[Install]" $path
 try_echo "WantedBy=multi-user.target" $path
 
