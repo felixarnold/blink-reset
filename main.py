@@ -73,7 +73,7 @@ def select_microcontroller(device):
 
     GPIO.add_event_detect(
             PIN_B,
-            GPIO.RISING,
+            GPIO.FALLING,
             callback=update_list_callback,
             bouncetime=50)
 
