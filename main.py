@@ -1,15 +1,14 @@
 #!/usr/bin/python3
-# main.py
 
-# import usb.core
-# import usb.util
 import json
 from time import sleep
 from RPLCD.i2c import CharLCD
 import pyudev
-from ui.rotary_encoder import RotaryEncoder
+from RPi.GPIO import GPIO
 
-boards_data = None
+boards = None
+current_index = 0
+selection = None
 
 LCD_ADDRESS = 0x27
 LCD_PORT = 1
@@ -20,38 +19,80 @@ lcd = CharLCD(
     cols=16,
     rows=2)
 
-PIN_A = 4
-PIN_B = 17
-PIN_BUTTON = 27
-re = RotaryEncoder(PIN_A, PIN_B, PIN_BUTTON)
+PIN_BUTTON = 21
+PIN_A = 22
+PIN_B = 23
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(PIN_BUTTON, GPIO.IN)
+GPIO.setup(PIN_A, GPIO.IN)
+GPIO.setup(PIN_B, GPIO.IN)
 
 
-def initialize_re():
-    re.setup_rotary_encoder()
+def update_list_callback(channel):
+    global current_index
+
+    if GPIO.input(PIN_A):
+        # clockwise
+        current_index = (current_index + 1) % len(boards.keys())
+    else:
+        # counter-clockwise
+        current_index = (current_index - 1) % len(boards.keys())
+
+    lcd.cursor_pos(1, 0)
+    lcd.write_string(boards.keys()[current_index])
+    pass
+
+
+def select_list_item_callback(channel):
+    global current_index
+    global selection
+
+    selection = boards[current_index]
+    pass
 
 
 def select_microcontroller(device):
+    global selection
+    global current_index
+
     vid = device.get('ID_VENDOR_ID')
     pid = device.get('ID_MODEL_ID')
-    print(vid)
-    print(pid)
 
-    for board_name, board_data in boards_data.items():
-        print(board_data['vid'])
-        print(board_data['pid'])
+    for board_name, board_data in boards.items():
         if board_data['vid'] == vid and board_data['pid'] == pid:
             return device
 
+    lcd.clear()
+    lcd.write_string("Select a MC:")
+
+    GPIO.add_event_detect(
+            PIN_B,
+            GPIO.RISING,
+            callback=update_list_callback,
+            bouncetime=50)
+
+    GPIO.add_event_detect(
+            PIN_BUTTON,
+            GPIO.RISING,
+            callback=select_list_item_callback)
+
+    while selection is None:
+        lcd.cursor_pos(1, 0)
+        text = boards.keys()[current_index]
+        lcd.write_string(text)
+
+    GPIO.remove_event_detect(PIN_B)
+    GPIO.remove_event_detect(PIN_BUTTON)
+
     # Provide a list of available boards and prompt the user to select one
     print("Available microcontroller boards:")
-    for i, board_name in enumerate(boards_data.keys()):
+    for i, board_name in enumerate(boards.keys()):
         print(f"{i+1}. {board_name}")
-
-    selection = input("Enter the number of the board you want to select: ")
 
     try:
         index = int(selection) - 1
-        board_name = list(boards_data.keys())[index]
+        board_name = list(boards.keys())[index]
         return board_name
     except (ValueError, IndexError):
         print("Invalid selection.")
@@ -67,7 +108,8 @@ def flash_microcontroller_board(board_name):
 
 
 def blink_reset(action, device):
-    global boards_data
+    global boards
+
     lcd.backlight_enabled = True
     lcd.write_string("Hello")
 
@@ -94,12 +136,12 @@ def blink_reset(action, device):
 
 
 def main():
-    global boards_data
+    global boards
 
     lcd.backlight_enabled = False
 
     with open('boards.json', 'r') as file:
-        boards_data = json.load(file)
+        boards = json.load(file)
 
     context = pyudev.Context()
     monitor = pyudev.Monitor.from_netlink(context)
@@ -107,8 +149,6 @@ def main():
 
     observer = pyudev.MonitorObserver(monitor, blink_reset)
     observer.start()
-
-    initialize_re()
 
     while True:
         pass
