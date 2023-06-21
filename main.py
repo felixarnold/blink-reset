@@ -79,7 +79,7 @@ def select_microcontroller(device):
 
     while selection is None:
         lcd.cursor_pos = (1, 0)
-        text = boards.keys()[current_index]
+        text = list(boards)[current_index]
         lcd.write_string(text)
         sleep(.5)
 
