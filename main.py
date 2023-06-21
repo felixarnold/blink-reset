@@ -4,7 +4,7 @@ import json
 from time import sleep
 from RPLCD.i2c import CharLCD
 import pyudev
-from RPi.GPIO import GPIO
+import RPi.GPIO as GPIO
 
 boards = None
 current_index = 0
