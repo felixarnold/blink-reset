@@ -40,7 +40,7 @@ def update_list_callback(channel):
         current_index = (current_index - 1) % len(boards.keys())
 
     lcd.cursor_pos = (1, 0)
-    lcd.write_string(boards.keys()[current_index])
+    lcd.write_string(list(boards)[current_index])
     pass
 
 
@@ -65,6 +65,8 @@ def select_microcontroller(device):
 
     lcd.clear()
     lcd.write_string("Select a MC:")
+    lcd.cursor_pos = (1, 0)
+    lcd.write_string(list(boards)[current_index])
 
     GPIO.add_event_detect(
             PIN_B,
@@ -78,10 +80,6 @@ def select_microcontroller(device):
             callback=select_list_item_callback)
 
     while selection is None:
-        # lcd.cursor_pos = (1, 0)
-        # text = list(boards)[current_index]
-        # lcd.write_string(text)
-        # sleep(.5)
         pass
 
     GPIO.remove_event_detect(PIN_B)
