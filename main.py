@@ -81,6 +81,7 @@ def select_microcontroller(device):
         lcd.cursor_pos(1, 0)
         text = boards.keys()[current_index]
         lcd.write_string(text)
+        sleep(.5)
 
     GPIO.remove_event_detect(PIN_B)
     GPIO.remove_event_detect(PIN_BUTTON)
