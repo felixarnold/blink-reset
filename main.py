@@ -78,7 +78,7 @@ def select_microcontroller(device):
             callback=select_list_item_callback)
 
     while selection is None:
-        lcd.cursor_pos(1, 0)
+        lcd.cursor_pos = (1, 0)
         text = boards.keys()[current_index]
         lcd.write_string(text)
         sleep(.5)
