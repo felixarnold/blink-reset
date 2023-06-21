@@ -39,6 +39,9 @@ def update_list_callback(channel):
         # counter-clockwise
         current_index = (current_index - 1) % len(boards.keys())
 
+    print(current_index)
+    print(list(boards)[current_index])
+
     lcd.cursor_pos = (1, 0)
     lcd.write_string(list(boards)[current_index])
     pass
