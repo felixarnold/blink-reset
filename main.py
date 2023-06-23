@@ -22,9 +22,6 @@ def rotary_callback(channel):
     global clk_last_state
     global boards
 
-    if boards is None:
-        pass
-
     clk_state = GPIO.input(clk)
     dt_state = GPIO.input(dt)
     
@@ -37,8 +34,8 @@ def rotary_callback(channel):
         lcd.clear()
         lcd.write_string(list(boards)[index])
 
-    print(index)
-    print(list(boards)[index])
+        print(index)
+        print(list(boards)[index])
 
     clk_last_state = clk_state
     pass
