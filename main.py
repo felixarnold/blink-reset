@@ -6,6 +6,7 @@ from RPLCD.i2c import CharLCD
 import pyudev
 import RPi.GPIO as GPIO
 from sys import exit
+from datetime import datetime
 
 lcd_address = 0x27
 lcd_port = 1
@@ -34,11 +35,9 @@ def rotary_callback(channel):
         lcd.clear()
         lcd.write_string(list(boards)[index])
 
-        print(index)
-        print(list(boards)[index])
+        print(datetime.now().timestamp(), index, list(boards)[index])
 
     clk_last_state = clk_state
-    pass
 
 
 def select_microcontroller(device):
