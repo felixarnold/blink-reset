@@ -148,12 +148,12 @@ def main():
     lcd.backlight_enabled = False
 
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(clk, GPIO.IN)
-    GPIO.setup(dt, GPIO.IN)
+    GPIO.setup(clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(sw, GPIO.IN)
 
     try:
-        GPIO.add_event_detect(clk, GPIO.FALLING, callback=rotary_callback)
+        GPIO.add_event_detect(clk, GPIO.BOTH, callback=rotary_callback)
         while True:
             sleep(1)
     finally:
