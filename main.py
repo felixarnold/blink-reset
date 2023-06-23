@@ -146,10 +146,10 @@ def main():
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(clk, GPIO.IN)
     GPIO.setup(dt, GPIO.IN)
-    GPIO.setup(sw, GPIO.IN)
+    GPIO.setup(sw, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
     try:
-        GPIO.add_event_detect(clk, GPIO.RISING, callback=rotary_callback)
+        GPIO.add_event_detect(clk, GPIO.FALLING, callback=rotary_callback, bouncetime=250)
         while True:
             sleep(1)
     finally:
