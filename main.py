@@ -34,28 +34,13 @@ def rotary_callback(channel):
         else:
             index = (index - 1) % len(boards.keys())
 
-        lcd_update_list()
+        lcd.clear()
+        lcd.write_string(list(boards)[index])
 
     print(index)
     print(list(boards)[index])
 
     clk_last_state = clk_state
-    pass
-
-
-def lcd_update_list():
-    global index
-    global boards
-    
-    lcd.clear()
-    lcd.write_string(list(boards)[index])
-
-
-def select_list_item_callback(channel):
-    global current_index
-    global selection
-
-    selection = boards[current_index]
     pass
 
 
@@ -168,7 +153,7 @@ def main():
     GPIO.setup(sw, GPIO.IN)
 
     try:
-        GPIO.add_event_detect(clk, GPIO.BOTH, callback=rotary_callback)
+        GPIO.add_event_detect(clk, GPIO.FALLING, callback=rotary_callback)
         while True:
             sleep(1)
     finally:
