@@ -150,7 +150,7 @@ def main():
     GPIO.setup(sw, GPIO.IN)
 
     try:
-        GPIO.add_event_detect(clk, GPIO.BOTH, callback=rotary_callback)
+        GPIO.add_event_detect(clk, GPIO.RISING, callback=rotary_callback)
         while True:
             sleep(1)
     finally:
