@@ -55,8 +55,7 @@ def select_microcontroller(device):
     lcd.write_string(list(boards)[index])
 
     GPIO.add_event_detect(clk, GPIO.FALLING, callback=rotary_callback, bouncetime=50)
-
-    GPIO.add_event_detect(sw, GPIO.FALLING, callback=sw_callback)
+    GPIO.add_event_detect(sw, GPIO.FALLING, callback=sw_callback, bouncetime=300)
 
     while selection is None:
         sleep(1)
