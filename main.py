@@ -13,7 +13,6 @@ clk = 22
 dt = 27
 sw = 17
 index = 0
-selection = None
 
 
 def rotary_callback(channel):
@@ -40,12 +39,12 @@ def sw_callback(channel):
     global selection
 
     print(list(boards)[index])
-    selection = boards.values()[index]
+    selection = list(boards)[index]
 
 
 def select_microcontroller(device):
-    global selection
     global index
+    selection = None
 
     vid = device.get('ID_VENDOR_ID')
     pid = device.get('ID_MODEL_ID')
@@ -69,6 +68,7 @@ def select_microcontroller(device):
     GPIO.remove_event_detect(sw)
 
     exit()
+    return boards[selection]
 
 
 def flash_microcontroller_board(board_name):
