@@ -33,8 +33,6 @@ def rotary_callback(channel):
         lcd.clear()
         lcd.write_string(list(boards)[index])
 
-        print(index, list(boards)[index])
-
 
 def select_microcontroller(device):
     global selection
@@ -145,7 +143,7 @@ def main():
     GPIO.setup(sw, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
     try:
-        GPIO.add_event_detect(clk, GPIO.FALLING, callback=rotary_callback, bouncetime=250)
+        GPIO.add_event_detect(clk, GPIO.FALLING, callback=rotary_callback, bouncetime=50)
         while True:
             sleep(1)
     finally:

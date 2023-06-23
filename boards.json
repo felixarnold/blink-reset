@@ -1,10 +1,25 @@
 {
-  "arduino_uno_r3": {
-    "vid": "2341",
-    "pid": "0043"
-  },
-  "board2": {
-    "vid": "5824",
-    "pid": "1155"
-  }
+    "arduino_uno_r3": {
+        "vid": "2341",
+        "pid": "0043"
+    },
+    "arduino_micro": {
+        "vid": "2341",
+        "pid": "8037"
+    },
+    "esp8266_azdelivery": {
+        "alias": "Silicon Labs CP210x UART Bridge",
+        "vid": "10c4",
+        "pid": "ea60"
+    },
+    "esp8266_makershop": {
+        "alias": "QinHeng Electronics CH340 serial converter",
+        "vid": "1a86",
+        "pid": "7523"
+    },
+    "esp32_ttgo_displa_lilygo": {
+        "alias": "QinHeng Electronics USB Single Serial",
+        "vid": "1a86",
+        "pid": "55d4"
+    }
 }
