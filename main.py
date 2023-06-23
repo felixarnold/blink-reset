@@ -14,7 +14,6 @@ dt = 22
 sw = 21
 index = 0
 clk_last_state = None
-boards = None
 selection = None
 
 
@@ -42,6 +41,14 @@ def rotary_callback(channel):
 
     clk_last_state = clk_state
     pass
+
+
+def lcd_update_list():
+    global index
+    global boards
+    
+    lcd.clear()
+    lcd.write_string(list(boards)[index])
 
 
 def select_list_item_callback(channel):
@@ -137,6 +144,7 @@ def blink_reset(action, device):
 
 def main():
     global boards
+    global lcd
 
     with open('boards.json', 'r') as file:
         boards = json.load(file)
