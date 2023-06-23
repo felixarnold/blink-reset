@@ -34,9 +34,13 @@ def rotary_callback(channel):
         lcd.write_string(list(boards)[index])
 
 
+def sw_callback(channel):
+    global selection
+
+
 def select_microcontroller(device):
     global selection
-    global current_index
+    global index
 
     vid = device.get('ID_VENDOR_ID')
     pid = device.get('ID_MODEL_ID')
@@ -48,37 +52,19 @@ def select_microcontroller(device):
     lcd.clear()
     lcd.write_string("Select a MC:")
     lcd.cursor_pos = (1, 0)
-    lcd.write_string(list(boards)[current_index])
+    lcd.write_string(list(boards)[index])
 
-    GPIO.add_event_detect(
-            PIN_B,
-            GPIO.FALLING,
-            callback=update_list_callback,
-            bouncetime=50)
+    GPIO.add_event_detect(clk, GPIO.FALLING, callback=rotary_callback, bouncetime=50)
 
-    GPIO.add_event_detect(
-            PIN_BUTTON,
-            GPIO.RISING,
-            callback=select_list_item_callback)
+    GPIO.add_event_detect(sw, GPIO.FALLING, callback=sw_callback)
 
     while selection is None:
-        pass
+        sleep(1)
 
-    GPIO.remove_event_detect(PIN_B)
-    GPIO.remove_event_detect(PIN_BUTTON)
+    GPIO.remove_event_detect(clk)
+    GPIO.remove_event_detect(sw)
 
-    # Provide a list of available boards and prompt the user to select one
-    print("Available microcontroller boards:")
-    for i, board_name in enumerate(boards.keys()):
-        print(f"{i+1}. {board_name}")
-
-    try:
-        index = int(selection) - 1
-        board_name = list(boards.keys())[index]
-        return board_name
-    except (ValueError, IndexError):
-        print("Invalid selection.")
-        return None
+    exit()
 
 
 def flash_microcontroller_board(board_name):
@@ -141,14 +127,6 @@ def main():
     GPIO.setup(clk, GPIO.IN)
     GPIO.setup(dt, GPIO.IN)
     GPIO.setup(sw, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-
-    try:
-        GPIO.add_event_detect(clk, GPIO.FALLING, callback=rotary_callback, bouncetime=50)
-        while True:
-            sleep(1)
-    finally:
-        GPIO.cleanup()
-        lcd.clear()
 
     context = pyudev.Context()
     monitor = pyudev.Monitor.from_netlink(context)
