@@ -5,45 +5,42 @@ from time import sleep
 from RPLCD.i2c import CharLCD
 import pyudev
 import RPi.GPIO as GPIO
+from sys import exit
 
+lcd_address = 0x27
+lcd_port = 1
+clk = 27
+dt = 22
+sw = 21
+index = 0
+clk_last_state = None
 boards = None
-current_index = 0
 selection = None
 
-LCD_ADDRESS = 0x27
-LCD_PORT = 1
-lcd = CharLCD(
-    i2c_expander='PCF8574',
-    address=LCD_ADDRESS,
-    port=LCD_PORT,
-    cols=16,
-    rows=2)
 
-PIN_BUTTON = 21
-PIN_A = 22
-PIN_B = 23
+def rotary_callback(channel):
+    global index
+    global clk_last_state
+    global boards
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(PIN_BUTTON, GPIO.IN)
-GPIO.setup(PIN_A, GPIO.IN)
-GPIO.setup(PIN_B, GPIO.IN)
+    if boards is None:
+        pass
 
+    clk_state = GPIO.input(clk)
+    dt_state = GPIO.input(dt)
+    
+    if clk_state != clk_last_state:
+        if dt_state != clk_state:
+            index = (index + 1) % len(boards.keys())
+        else:
+            index = (index - 1) % len(boards.keys())
 
-def update_list_callback(channel):
-    global current_index
+        lcd_update_list()
 
-    if GPIO.input(PIN_A):
-        # clockwise
-        current_index = (current_index + 1) % len(boards.keys())
-    else:
-        # counter-clockwise
-        current_index = (current_index - 1) % len(boards.keys())
+    print(index)
+    print(list(boards)[index])
 
-    print(current_index)
-    print(list(boards)[current_index])
-
-    lcd.cursor_pos = (1, 0)
-    lcd.write_string(list(boards)[current_index])
+    clk_last_state = clk_state
     pass
 
 
@@ -141,10 +138,34 @@ def blink_reset(action, device):
 def main():
     global boards
 
-    lcd.backlight_enabled = False
-
     with open('boards.json', 'r') as file:
         boards = json.load(file)
+
+    try:
+        lcd = CharLCD(
+            i2c_expander='PCF8574',
+            address=lcd_address,
+            port=lcd_port,
+            cols=16,
+            rows=2)
+    except OSError:
+        print("Error initializing the LCD display. Please check your I2C bus and address settings.")
+        exit(1)
+
+    lcd.backlight_enabled = False
+
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(clk, GPIO.IN)
+    GPIO.setup(dt, GPIO.IN)
+    GPIO.setup(sw, GPIO.IN)
+
+    try:
+        GPIO.add_event_detect(clk, GPIO.BOTH, callback=rotary_callback)
+        while True:
+            sleep(1)
+    finally:
+        GPIO.cleanup()
+        lcd.clear()
 
     context = pyudev.Context()
     monitor = pyudev.Monitor.from_netlink(context)
