@@ -9,9 +9,9 @@ from sys import exit
 
 lcd_address = 0x27
 lcd_port = 1
-clk = 27
-dt = 22
-sw = 21
+clk = 22
+dt = 27
+sw = 17
 index = 0
 selection = None
 
@@ -35,7 +35,12 @@ def rotary_callback(channel):
 
 
 def sw_callback(channel):
+    global boards
+    global index
     global selection
+
+    print(list(boards)[index])
+    selection = boards.values()[index]
 
 
 def select_microcontroller(device):
